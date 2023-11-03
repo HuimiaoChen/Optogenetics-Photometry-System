@@ -2,15 +2,15 @@
 
 Optogenetics-Photometry Hardware &amp; Software System
 
-![Optogenetics-Fiberphotometry_1](./Optogenetics-Fiberphotometry_0.jpg)
+![Optogenetics-Fiberphotometry_0](./Optogenetics-Fiberphotometry_0.jpg)
 
 ![Optogenetics-Fiberphotometry_1](./Optogenetics-Fiberphotometry_1.jpg)
 
-![Optogenetics-Fiberphotometry_1](./OptoPhotometry_GUI-0.jpg)
+![OptoPhotometry_GUI-0](./OptoPhotometry_GUI-0.jpg)
 
-![Optogenetics-Fiberphotometry_1](./OptoPhotometry_GUI-1.jpg)
+![OptoPhotometry_GUI-1](./OptoPhotometry_GUI-1.jpg)
 
-![Optogenetics-Fiberphotometry_1](./OptoPhotometry_GUI-2.jpg)
+![OptoPhotometry_GUI-2](./OptoPhotometry_GUI-2.jpg)
 
 v1: basic version.
 
