@@ -2,7 +2,7 @@ Use MATLAB 2022b or newer versions.
 
 Pre-Period: during the pre-period, the output signals are always 0 volts (TTL low).
 
-Stimulation Period: during the stimulation period, each color light is set separately, please calculate the parameters of them carefully so that they achieve the desired outputs. We have a start time (delay time with 0 volt output after stimulation period starts) and at most 4 stages for each color. Each stage can have its own frequency and duty ratio for both the red and blue light. If you need less than 4 stages, turn off some of them. For example, you need only 2 stage, then you can turn off any 2 stages and the remaining 2 stages are labeled as Stage 1 and Stage 2. The stimulation period ends when it runs out the time. For example, if your red strat time is bigger than stimulation period, then the output of red is always zero and the settings of res stages will not be used. If a color's four stage are all "Off", then it gives 0-volt output during the stimulation. We also have left time. Start time is zero input at the begining of stimulation; and left time is zero input duration at the end of stimulation.
+Stimulation Period: during the stimulation period, each color light is set separately, please calculate the parameters of them carefully so that they achieve the desired outputs. We have a start time (delay time with 0 volt output after stimulation period starts) and at most 4 stages for each color. Each stage can have its own frequency and duty ratio for both the red and blue light. If you need less than 4 stages, turn off some of them. For example, you need only 2 stage, then you can turn off any 2 stages and the remaining 2 stages are labeled as Stage 1 and Stage 2. The stimulation period ends when it runs out the time. For example, if your red start time is bigger than stimulation period, then the output of red is always zero and the settings of res stages will not be used. If a color's four stage are all "Off", then it gives 0-volt output during the stimulation. We also have left time. Start time is zero input at the beginning of stimulation; and left time is zero input duration at the end of stimulation.
 
 Freq should be a positive number. If you want constant TTL low (high), set Duty Ratio to 0 (1) with Freq being any positive number.
 
@@ -21,7 +21,7 @@ Rotary encoder:
 analog input "ai1" for rotary encoder port 1 -- Enc1 (White of our audio cable);
 analog input "ai5" for rotary encoder port 2 -- Enc2 (Red of our audio cable).
 
-"ai2" for synchroninization between the visual stimuli computer and the opto computer.
+"ai2" for synchronization between the visual stimuli computer and the opto computer.
 
 Post-Period: during the post-period, the output signals are always 0 volts (TTL low) so that laser sources are shut down and you have time to disconnect the cables or turn off the devices. Use nonnegative number.
 
@@ -35,17 +35,17 @@ Note: the analog input frame number (and its rate) is slightly lower than the ou
 -----
 Below are notes for devices.
 
-Note 1: the laser device (635 nm, red) can only be controled by TTL signals so we need to let TTL signals be high to adjust the intensity of the laser. TTL high is > 2.5 V. The analog input is in the range of 0-2.5V; for TTL: > 2.5V to full output. When the input volatge is lower than 2.5V, the red laser becomes in analog mode. The knob can change the magnitude of the intensity, making the intensity vary proportionally.
+Note 1: the laser device (635 nm, red) can only be controlled by TTL signals so we need to let TTL signals be high to adjust the intensity of the laser. TTL high is > 2.5 V. The analog input is in the range of 0-2.5V; for TTL: > 2.5V to full output. When the input voltage is lower than 2.5V, the red laser becomes in analog mode. The knob can change the magnitude of the intensity, making the intensity vary proportionally.
 
-Note 2: the laser device (473 nm, blue) can controled by both TTL signals and analog siganls (there is a switch for changing the mode), but we only use TTL control and let TTL signals be high to adjust the intensity of the laser. TTL high is > 2.3 V; TTL low is < 0.7 V.  Analog control is between 0 and 5 V (off: < 0.7 V).
+Note 2: the laser device (473 nm, blue) can controlled by both TTL signals and analog signals (there is a switch for changing the mode), but we only use TTL control and let TTL signals be high to adjust the intensity of the laser. TTL high is > 2.3 V; TTL low is < 0.7 V.  Analog control is between 0 and 5 V (off: < 0.7 V).
 
 Note 3: we can only use the knob to adjust the light intensity of the laser devices when TTL control is not connected or it is connected and the signal is high; we cannot do that **when the TTL control cable is enabled/connected but TTL is low or no signal**.
 
-Note 4: the LED (Plex) driver (used for UV LED control) (not used currently) can be used to replace a laser device. It can be  controled by both TTL signals and analog siganls. TTL high is > 2 V; TTL low is < 0.7 V.  Analog control is between 0 and 5 V.
+Note 4: the LED (Plex) driver (used for UV LED control) (not used currently) can be used to replace a laser device. It can be controlled by both TTL signals and analog signals. TTL high is > 2 V; TTL low is < 0.7 V.  Analog control is between 0 and 5 V.
 
 Note 5: rotary encoder - Sleeve (S) connected to Ground (Yellow of our audio cable); Ring 2 (R2) connected to 5V (Black/Green? of our audio cable); Ring 1 (R1) connected to Enc1 (White of our audio cable); Tip (T) connected to Enc2 (Red of our audio cable).
 
-Note 6: photometry uses differential measure; connect the D GND (Digital Ground) to AI GND (Analog Input Ground) and connect +5 port to analog input "ai4". Because isolated measurement is not allowed according to NiDaq mannual.
+Note 6: photometry uses differential measure; connect the D GND (Digital Ground) to AI GND (Analog Input Ground) and connect +5 port to analog input "ai4". Because isolated measurement is not allowed according to NiDaq manual.
 
 -----
 Below are release notes.
@@ -60,4 +60,4 @@ v4: fix a "config load" bug.
 
 v4.1: fix a "config load" bug and a default setting bug; revise the help page.
 
-v5: update the whole system to supprt more advanced control; improve the latency of the control; frequency and period can be non-integers; add NiDaq output data saving (input data and video have to be saved); add separate stage control for different lasers; add video recording control; add ratory encoder recording control; add photometry recording control; a completely new version, but the control of UV is not enabled because of hardware.
+v5: update the whole system to support more advanced control; improve the latency of the control; frequency and period can be non-integers; add NiDaq output data saving (input data and video have to be saved); add separate stage control for different lasers; add video recording control; add rotary encoder recording control; add photometry recording control; a completely new version, but the control of UV is not enabled because of hardware.
