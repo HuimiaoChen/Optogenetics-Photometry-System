@@ -1,0 +1,456 @@
+%% OpetoPhotometry function for App
+function OptoPhotometry_func_for_App(app)
+    %% Input parameters
+    pre_period = app.pre_period; % unit:s
+
+    stimulation_period = app.stimulation_period; % unit:s
+    visual_stimuli_switch = app.visual_stimuli_switch; % "On" or "Off", string
+    photometry_switch = app.photometry_switch; % "On" or "Off", string
+    camera_switch = app.camera_switch; % "On" or "Off", string
+    rotary_encoder_switch = app.rotary_encoder_switch; % "On" or "Off", string
+    
+    red_start_time = app.red_start_time; % unit:s
+    red_left_time = app.red_left_time;
+    red_stage1_switch = app.red_stage1_switch; % "On" or "Off", string
+    red_stage1_duration = app.red_stage1_duration;  % double, unit:s
+    red_stage1_freq = app.red_stage1_freq; % double, unit: Hz
+    red_stage1_duty_ratio = app.red_stage1_duty_ratio; % double, unit: %
+    red_stage2_switch = app.red_stage2_switch;
+    red_stage2_duration = app.red_stage2_duration;
+    red_stage2_freq = app.red_stage2_freq;
+    red_stage2_duty_ratio = app.red_stage2_duty_ratio;
+    red_stage3_switch = app.red_stage3_switch;
+    red_stage3_duration = app.red_stage3_duration;
+    red_stage3_freq = app.red_stage3_freq;
+    red_stage3_duty_ratio = app.red_stage3_duty_ratio;
+    red_stage4_switch = app.red_stage4_switch;
+    red_stage4_duration = app.red_stage4_duration;
+    red_stage4_freq = app.red_stage4_freq;
+    red_stage4_duty_ratio = app.red_stage4_duty_ratio;
+    
+    blue_start_time = app.blue_start_time;
+    blue_left_time = app.blue_left_time;
+    blue_stage1_switch = app.blue_stage1_switch;
+    blue_stage1_duration = app.blue_stage1_duration;
+    blue_stage1_freq = app.blue_stage1_freq;
+    blue_stage1_duty_ratio = app.blue_stage1_duty_ratio;
+    blue_stage2_switch = app.blue_stage2_switch;
+    blue_stage2_duration = app.blue_stage2_duration;
+    blue_stage2_freq = app.blue_stage2_freq;
+    blue_stage2_duty_ratio = app.blue_stage2_duty_ratio;
+    blue_stage3_switch = app.blue_stage3_switch;
+    blue_stage3_duration = app.blue_stage3_duration;
+    blue_stage3_freq = app.blue_stage3_freq;
+    blue_stage3_duty_ratio = app.blue_stage3_duty_ratio;
+    blue_stage4_switch = app.blue_stage4_switch;
+    blue_stage4_duration = app.blue_stage4_duration;
+    blue_stage4_freq = app.blue_stage4_freq;
+    blue_stage4_duty_ratio = app.blue_stage4_duty_ratio;
+    
+    uv_start_time = app.uv_start_time;
+    uv_left_time = app.uv_left_time;
+    uv_stage1_switch = app.uv_stage1_switch;
+    uv_stage1_duration = app.uv_stage1_duration;
+    uv_stage1_freq = app.uv_stage1_freq;
+    uv_stage1_duty_ratio = app.uv_stage1_duty_ratio;
+    uv_stage2_switch = app.uv_stage2_switch;
+    uv_stage2_duration = app.uv_stage2_duration;
+    uv_stage2_freq = app.uv_stage2_freq;
+    uv_stage2_duty_ratio = app.uv_stage2_duty_ratio;
+    uv_stage3_switch = app.uv_stage3_switch;
+    uv_stage3_duration = app.uv_stage3_duration;
+    uv_stage3_freq = app.uv_stage3_freq;
+    uv_stage3_duty_ratio = app.uv_stage3_duty_ratio;
+    uv_stage4_switch = app.uv_stage4_switch;
+    uv_stage4_duration = app.uv_stage4_duration;
+    uv_stage4_freq = app.uv_stage4_freq;
+    uv_stage4_duty_ratio = app.uv_stage4_duty_ratio;
+    
+    post_period = app.post_period;
+
+    stage_number = 4;
+
+    red_switch_list = [
+        red_stage1_switch; 
+        red_stage2_switch; 
+        red_stage3_switch; 
+        red_stage4_switch
+        ];
+    red_duration_list = [
+        red_stage1_duration;
+        red_stage2_duration;
+        red_stage3_duration;
+        red_stage4_duration
+        ];
+    red_big_cycle_period_pseudo = sum(red_duration_list); % it's pseudo cuz some stages may be "Off" 
+    red_freq_list = [
+        red_stage1_freq;
+        red_stage2_freq;
+        red_stage3_freq;
+        red_stage4_freq
+        ];
+    red_small_cycle_list = [
+        1 / red_stage1_freq;
+        1 / red_stage2_freq;
+        1 / red_stage3_freq;
+        1 / red_stage4_freq
+        ];
+    red_duty_ratio_list = [
+        red_stage1_duty_ratio;
+        red_stage2_duty_ratio;
+        red_stage3_duty_ratio;
+        red_stage4_duty_ratio
+        ];
+
+    blue_switch_list = [
+        blue_stage1_switch; 
+        blue_stage2_switch; 
+        blue_stage3_switch; 
+        blue_stage4_switch
+        ];
+    blue_duration_list = [
+        blue_stage1_duration;
+        blue_stage2_duration;
+        blue_stage3_duration;
+        blue_stage4_duration
+        ];
+    blue_big_cycle_period_pseudo = sum(blue_duration_list);
+    blue_freq_list = [
+        blue_stage1_freq;
+        blue_stage2_freq;
+        blue_stage3_freq;
+        blue_stage4_freq
+        ];
+    blue_small_cycle_list = [
+        1 / blue_stage1_freq;
+        1 / blue_stage2_freq;
+        1 / blue_stage3_freq;
+        1 / blue_stage4_freq
+        ];
+    blue_duty_ratio_list = [
+        blue_stage1_duty_ratio;
+        blue_stage2_duty_ratio;
+        blue_stage3_duty_ratio;
+        blue_stage4_duty_ratio
+        ];
+
+    uv_switch_list = [
+        uv_stage1_switch; 
+        uv_stage2_switch; 
+        uv_stage3_switch; 
+        uv_stage4_switch
+        ];
+    uv_duration_list = [
+        uv_stage1_duration;
+        uv_stage2_duration;
+        uv_stage3_duration;
+        uv_stage4_duration
+        ];
+    uv_big_cycle_period_pseudo = sum(uv_duration_list);
+    uv_freq_list = [
+        uv_stage1_freq;
+        uv_stage2_freq;
+        uv_stage3_freq;
+        uv_stage4_freq
+        ];
+    uv_small_cycle_list = [
+        1 / uv_stage1_freq;
+        1 / uv_stage2_freq;
+        1 / uv_stage3_freq;
+        1 / uv_stage4_freq
+        ];
+    uv_duty_ratio_list = [
+        uv_stage1_duty_ratio;
+        uv_stage2_duty_ratio;
+        uv_stage3_duty_ratio;
+        uv_stage4_duty_ratio
+        ];
+    
+    %% get vendor and daq
+    % vendor_list = daqvendorlist;
+    % daq_list = daqlist;
+    % disp(daq_list{1, "DeviceInfo"}); 
+    % % the printed info includes channel names (channelID), which are the 
+    % % input for functions addinput and addoutput.
+    
+    % set different DataAcquisition interfaces.
+    % use d_analog for analog channels and d_digital for digital channels
+    d_analog = daq("ni");
+    d_digital = daq("ni");
+    
+    %% add channels and set rates for analog channels
+    
+    % % below add Analog Input channels
+
+    %  AI 0 and AI 4 are the positive and negative inputs of differential
+    %  analog input channel 0
+    if photometry_switch == "On"
+        addinput(d_analog, "Dev3", "ai0", "Voltage"); % photometry positive
+        addinput(d_analog, "Dev3", "ai4", "Voltage"); % photometry negative
+    end
+    
+    %  AI 1 and AI 5 are the positive and negative inputs of differential
+    %  analog input channel 1
+    if rotary_encoder_switch == "On"
+        addinput(d_analog, "Dev3", "ai1", "Voltage"); % rotary encoder port 1
+        addinput(d_analog, "Dev3", "ai5", "Voltage"); % rotary encoder port 2
+    end
+
+    if visual_stimuli_switch == "On"
+        addinput(d_analog, "Dev3", "ai2", "Voltage"); % visual stimuli synchronization port 
+    end
+
+    % % below add Analog Output channels
+    
+    addoutput(d_analog, "Dev3", "ao0", "Voltage");
+    addoutput(d_analog, "Dev3", "ao1", "Voltage");
+    
+    disp(d_analog.Channels);
+
+    % % below add Digital Output channels
+    
+    addoutput(d_digital, "Dev3", "port0/line0", "Digital");
+    
+    disp(d_digital.Channels);
+
+    % % rate settings
+    multiplier = 1; % for rate Hz, 1 means 1000 Hz
+    rate = 1000 * multiplier;
+    d_analog.Rate = rate;
+    min_scans = ceil(rate / 2) + 1;
+    % minimun scans required by NiDaq based on the rate
+    
+    %% signal settings
+    % note: red uses the analog Output 0; blue uses the analog Output 1; uv
+    % uses digitial Output port0/line0.
+
+    High_V = 3;
+
+    % signal data for pre-period
+    pre_signalData = [zeros * ones(1, round(pre_period * rate)); zeros * ones(1, round(pre_period * rate))];
+    
+    % signal data for stimulation period
+    red_signal_all = [];
+    blue_signal_all = [];
+
+    red_signal_pre = zeros(1, round(red_start_time * rate));
+    blue_signal_pre = zeros(1, round(blue_start_time * rate));
+%     disp(size(red_signal_pre)); % for debug
+%     disp(size(blue_signal_pre));
+    red_signal_all = [red_signal_all, red_signal_pre];
+    blue_signal_all = [blue_signal_all, blue_signal_pre];
+    
+    red_signal_stage = [];
+    blue_signal_stage = [];
+    red_big_cycle_period = 0;
+    blue_big_cycle_period = 0;
+    for j = 1:stage_number
+        if red_switch_list(j) == "On"
+            t_pulse_red = round((rate * red_small_cycle_list(j)) * red_duty_ratio_list(j) / 100); % how many scans for high
+            t_zero_red = round((rate * red_small_cycle_list(j)) - t_pulse_red); % how many scans for low (zero)
+            cycle_signal = [High_V * ones(1, t_pulse_red), zeros(1, t_zero_red)];
+            duration_signal = repmat(cycle_signal, 1, ceil(red_duration_list(j) / red_small_cycle_list(j)) + 10); % +10 to guarantee it is large enough
+%             disp("debug ----");  % for debug
+%             disp(size(duration_signal));
+%             disp(round(red_duration_list(j) * rate));
+            duration_signal = duration_signal(1:round(red_duration_list(j) * rate));
+            red_signal_stage = [red_signal_stage, duration_signal];
+
+            red_big_cycle_period = red_big_cycle_period + red_duration_list(j);
+        end
+
+        if blue_switch_list(j) == "On"
+            t_pulse_blue = round((rate * blue_small_cycle_list(j)) * blue_duty_ratio_list(j) / 100); % how many scans for high
+            t_zero_blue = round((rate * blue_small_cycle_list(j)) - t_pulse_blue); % how many scans for low (zero)
+            cycle_signal = [High_V * ones(1, t_pulse_blue), zeros(1, t_zero_blue)];
+            duration_signal = repmat(cycle_signal, 1, ceil(blue_duration_list(j) / blue_small_cycle_list(j)) + 10); % +10 to guarantee it is large enough
+            duration_signal = duration_signal(1:round(blue_duration_list(j) * rate));
+            blue_signal_stage = [blue_signal_stage, duration_signal];
+
+            blue_big_cycle_period = blue_big_cycle_period + blue_duration_list(j);
+        end
+    end
+    
+    if isequal(red_signal_stage, []) % all 4 stage switches are "Off", red_big_cycle_period = 0
+        red_signal_stage = zeros(1, max(red_big_cycle_period_pseudo, 1)); % in case red_big_cycle_period_pseudo is negative
+        red_big_cycle_period = max(red_big_cycle_period_pseudo, 1);
+    end
+    if isequal(blue_signal_stage, [])
+        blue_signal_stage = zeros(1, max(blue_big_cycle_period_pseudo, 1));
+        blue_big_cycle_period = max(blue_big_cycle_period_pseudo, 1);
+    end
+
+    red_signal_stages_all = repmat(red_signal_stage, 1, ceil((stimulation_period-red_start_time-red_left_time) / red_big_cycle_period) + 10); % +10 to guarantee it is large enough
+    red_signal_stages_all = red_signal_stages_all(1:round(stimulation_period * rate) - round(red_start_time * rate) - round(red_left_time * rate));
+    blue_signal_stages_all = repmat(blue_signal_stage, 1, ceil((stimulation_period-blue_start_time-blue_left_time) / blue_big_cycle_period) + 10);
+    blue_signal_stages_all = blue_signal_stages_all(1:round(stimulation_period * rate) - round(blue_start_time * rate) - round(blue_left_time * rate));
+%     disp(size(red_signal_stages_all)); % for debug
+%     disp(size(blue_signal_stages_all));
+
+    red_signal_all = [red_signal_all, red_signal_stages_all];
+    blue_signal_all = [blue_signal_all, blue_signal_stages_all];
+
+    red_signal_post = zeros(1, round(red_left_time * rate));
+    blue_signal_post = zeros(1, round(blue_left_time * rate));
+
+    red_signal_all = [red_signal_all, red_signal_post];
+    blue_signal_all = [blue_signal_all, blue_signal_post];
+
+    stimulation_signalData = [red_signal_all; blue_signal_all];
+
+    % signal data for post-period
+    post_signalData = [zeros(1, round(post_period * rate)); zeros(1, round(post_period * rate))]; 
+
+    % the whole signal data
+    whole_signalData = [pre_signalData, stimulation_signalData, post_signalData];
+    if size(whole_signalData, 2) < min_scans
+        whole_signalData = [whole_signalData, zeros(2, min_scans - size(whole_signalData, 2))];
+    end
+
+    %% manipulate red/blue/uv start time and the control time of uv (digital)
+
+%     start_time_list = [red_start_time, blue_start_time, uv_start_time];
+%     laser_names = ["Red", "Blue", "UV"];
+%     
+%     [sorted_start_time_list, index_] = sort(start_time_list);
+%     sorted_laser_names = laser_names(index_);
+    
+    %% start output
+    % note: red uses the analog Output 0; blue uses the analog Output 1; uv
+    % uses digitial Output port0/line0.
+
+    preload(d_analog, whole_signalData');
+    
+    if camera_switch == "On"
+        % read video recording device
+        imaqhwinfo;
+        info = imaqhwinfo('gentl');
+        vid = videoinput('gentl',1,'Mono8');
+        
+        % start video recording
+        video_start_time = now;
+        vid.FramesPerTrigger = Inf;
+        start(vid);
+    
+        disp_info = "Video recording begins.";
+        disp(disp_info);
+        app.OutputTextArea.Value = [app.OutputTextArea.Value; disp_info];
+        app.OutputTextArea.scroll('bottom');
+    end
+
+    disp_info = "Experiment begins.";
+    disp(disp_info);
+    app.OutputTextArea.Value = [app.OutputTextArea.Value; disp_info];
+    app.OutputTextArea.scroll('bottom');
+
+    start(d_analog,"Continuous");
+    exp_start_time = now;
+
+    disp_info = "Now is Pre-Period.";
+    disp(disp_info);
+    app.OutputTextArea.Value = [app.OutputTextArea.Value; disp_info];
+    app.OutputTextArea.scroll('bottom');
+
+    pause(pre_period);
+
+    disp_info = "Now is Stimulation Period.";
+    disp(disp_info);
+    app.OutputTextArea.Value = [app.OutputTextArea.Value; disp_info];
+    app.OutputTextArea.scroll('bottom');
+
+%     pause(sorted_start_time_list(1));
+    
+%     if sorted_laser_names(1) ~= "UV"
+%         disp_info = sorted_laser_names(1) + " signal output begins.";
+%         disp(disp_info);
+%         app.OutputTextArea.Value = [app.OutputTextArea.Value; disp_info];
+%         app.OutputTextArea.scroll('bottom');
+%     end
+
+%     pause(sorted_start_time_list(2) - sorted_start_time_list(1));
+
+%     if sorted_laser_names(2) ~= "UV"
+%         disp_info = sorted_laser_names(2) + " signal output begins.";
+%         disp(disp_info);
+%         app.OutputTextArea.Value = [app.OutputTextArea.Value; disp_info];
+%         app.OutputTextArea.scroll('bottom');
+%     end
+
+%     pause(sorted_start_time_list(3) - sorted_start_time_list(2));
+    
+%     if sorted_laser_names(3) ~= "UV"
+%         disp_info = sorted_laser_names(3) + " signal output begins.";
+%         disp(disp_info);
+%         app.OutputTextArea.Value = [app.OutputTextArea.Value; disp_info];
+%         app.OutputTextArea.scroll('bottom');
+%     end
+
+%     pause(stimulation_period - sorted_start_time_list(3));
+    pause(stimulation_period);
+
+    disp_info = "Now is Post-Period.";
+    disp(disp_info);
+    app.OutputTextArea.Value = [app.OutputTextArea.Value; disp_info];
+    app.OutputTextArea.scroll('bottom');
+
+    pause(post_period);
+
+    exp_end_time = now;
+    stop(d_analog);
+
+    disp_info = "Experiment ends.";
+    disp(disp_info);
+    app.OutputTextArea.Value = [app.OutputTextArea.Value; disp_info];
+    app.OutputTextArea.scroll('bottom');
+    
+    if camera_switch == "On"
+        % end video recording
+        video_end_time = now;
+        stop(vid);
+        video_data = getdata(vid, vid.FramesAvailable);
+    
+        disp_info = "Video recording ends.";
+        disp(disp_info);
+        app.OutputTextArea.Value = [app.OutputTextArea.Value; disp_info];
+        app.OutputTextArea.scroll('bottom');
+    end
+
+    exp_total_time_in_min = (exp_end_time - exp_start_time) * 24 * 60; % unit: min
+    exp_total_time_in_s = (exp_end_time - exp_start_time) * 24 * 60 * 60; % unit: s
+
+    disp_info = "Experiment total time: " + string(num2str(exp_total_time_in_min) + " min (" + exp_total_time_in_s + " s).");
+    disp(disp_info);
+    app.OutputTextArea.Value = [app.OutputTextArea.Value; disp_info];
+    app.OutputTextArea.scroll('bottom');
+
+    disp_info = "Data saving begins.";
+    disp(disp_info);
+    app.OutputTextArea.Value = [app.OutputTextArea.Value; disp_info];
+    app.OutputTextArea.scroll('bottom');
+    
+    if photometry_switch == "On" || rotary_encoder_switch == "On"
+        scanData_timetable = read(d_analog,"all");
+        scanData_matrix = scanData_timetable.Variables; 
+    end
+    
+    currentDateTime = string(datestr(datetime('now'), 'yyyymmddHHMMSS'));
+    
+    if photometry_switch == "On" || rotary_encoder_switch == "On"
+        if camera_switch == "On"
+            save("expData_" + currentDateTime + ".mat", 'whole_signalData', 'scanData_timetable', 'scanData_matrix', 'video_start_time', 'exp_start_time', 'exp_end_time', 'video_end_time', 'video_data', '-v7.3');
+        else
+            save("expData_" + currentDateTime + ".mat", 'whole_signalData', 'scanData_timetable', 'scanData_matrix', 'exp_start_time', 'exp_end_time', '-v7.3');
+        end
+    else
+        if camera_switch == "On"
+            save("expData_" + currentDateTime + ".mat", 'whole_signalData', 'video_start_time', 'exp_start_time', 'exp_end_time', 'video_end_time', 'video_data', '-v7.3');
+        else
+            save("expData_" + currentDateTime + ".mat", 'whole_signalData', 'exp_start_time', 'exp_end_time', '-v7.3');
+        end
+    end
+
+    disp_info = "Data saving ends.";
+    disp(disp_info);
+    app.OutputTextArea.Value = [app.OutputTextArea.Value; disp_info];
+    app.OutputTextArea.scroll('bottom');
+end

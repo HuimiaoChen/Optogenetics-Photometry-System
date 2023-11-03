@@ -1,0 +1,21 @@
+Pre-Period: during the pre-period, the output signals are always 3 volts (TTL high) so that you can adjust the intensity of the laser devices before the expriment. Use nonnegative number.
+
+Stimulation Period: during the stimulation period, we have at most 4 stages in one cycle. Each stage can have its own frequency and duty ratio for both the red and blue light. If you need less than 4 stages, turn off some of them. For example, you need only 2 stage, then you can turn off any 2 stages and the remaining 2 stages are labeled as Stage 1 and Stage 2, which will be shown in the output window during the experiment. Cycle Number means how many repeats of these stages.
+
+Freq should be a positive number. If you want constant TTL low (high), set Duty Ratio to 0 (1) with Freq being any positive number. Freq need to let the period be integer (in millisecond), e.g., the default rate is 1000 Hz, then 1000/Freq needs to be an integer.
+
+Duty Ratio should be between 0 and 100. 1000/Freq*Duty Ratio needs to be an integer.
+
+Duration should be a nonnegative number.
+
+Red light uses the Analog Output 0; Blue uses the Analog Output 1.
+
+Post-Period: during the post-period, the output signals are always 0 volts (TTL low) so that laser sources are shut down and you have time to disconnect the cables or turn off the devices. Use nonnegative number.
+
+Note 1: the laser device (635 nm, red) can only be controled by TTL signals so we need to let TTL signals be high to adjust the intensity of the laser. TTL high is > 2.5 V. The analog input is in the range of 0-2.5V; for TTL: > 2.5V to full output. When the input volatge is lower than 2.5V, the red laser becomes in analog mode. The knob can change the magnitude of the intensity, making the intensity vary proportionally.
+
+Note 2: the laser device (473 nm, blue) can controled by both TTL signals and analog siganls (there is a switch for changing the mode), but we only use TTL control and let TTL signals be high to adjust the intensity of the laser. TTL high is > 2.3 V; TTL low is < 0.7 V.  Analog control is between 0 and 5 V (off: < 0.7 V).
+
+Note 3: we can only use the knob to adjust the light intensity of the laser devices when TTL control is not connected or it is connected and the signal is high; we cannot do that **when the TTL control cable is enabled/connected but TTL is low or no signal**.
+
+Note 4: the LED (Plex) driver (used for UV LED control) (not used currently) can be used to replace a laser device. It can be  controled by both TTL signals and analog siganls. TTL high is > 2 V; TTL low is < 0.7 V.  Analog control is between 0 and 5 V.
