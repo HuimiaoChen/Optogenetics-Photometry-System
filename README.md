@@ -62,6 +62,7 @@ Note: 'whole_signalData', 'scanData_timetable', 'video_data', 'scanData_matrix',
 Note: the analog input frame number (and its rate) is slightly lower than the output frame number and rate especially there are multiple inputs. The output is stable.
 
 Below are notes for devices.
+
 Note 1: the laser device (635 nm, red) can only be controlled by TTL signals so we need to let TTL signals be high to adjust the intensity of the laser. TTL high is > 2.5 V. The analog input is in the range of 0-2.5V; for TTL: > 2.5V to full output. When the input voltage is lower than 2.5V, the red laser becomes in analog mode. The knob can change the magnitude of the intensity, making the intensity vary proportionally.
 
 Note 2: the laser device (473 nm, blue) can controlled by both TTL signals and analog signals (there is a switch for changing the mode), but we only use TTL control and let TTL signals be high to adjust the intensity of the laser. TTL high is > 2.3 V; TTL low is < 0.7 V.  Analog control is between 0 and 5 V (off: < 0.7 V).
